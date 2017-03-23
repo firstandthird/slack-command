@@ -5,39 +5,70 @@ class SlackCommand {
   constructor(token) {
     this.server = '';
     this.token = token;
-    this.cmdMatches = {};
+    this.commands = {};
   }
-  slackCommand(cmdPath, cmdMatches) {
-    if (typeof cmdMatchs === 'function') {
-      this.cmdMatches = {
-        '*': cmdMatches
-      };
-    } else {
-      this.cmdMatches = cmdMatches;
-    }
+  register(command, commandHandlers) {
+    this.commands[command] = commandHandlers;
   }
 
+  stop(callback) {
+    this.server.stop(callback);
+  }
 
   listen(port, callback) {
     this.server = new Hapi.Server();
-    this.server.connect({ port });
+    this.server.connection({ port });
+    const slackCommand = this;
     this.server.route({
       method: 'POST',
       path: '/',
       handler(request, reply) {
-        if (request.payload.token === this.token) {
-          return boom.permissionDenied(request);
+        // make sure the token matches:
+        if (request.payload.token !== slackCommand.token) {
+          return reply(boom.unauthorized(request));
         }
-        const commandList = Object.keys(this.cmdMatches);
-        console.log('hey')
-        for (let i = 0; i < commandList.length; i++) {
-          const curCommand = new RegExp(commandList[i]).match(request.payload.command);
-          if (curCommand.length !== 0) {
-            console.log(curCommand);
+        // make sure that command exists:
+        const commandHandler = slackCommand.commands[request.payload.command];
+        if (commandHandler === undefined) {
+          return reply(boom.methodNotAllowed());
+        }
+        // a method to invoke commands:
+        const invokeCommand = (commandMethod, match) => {
+          const invokeCallback = (err, commandResult) => {
+            if (err) {
+              return reply(boom.wrap(err));
+            }
+            return reply(null, commandResult);
+          };
+          if (!match) {
+            return commandMethod(request.payload, invokeCallback);
+          }
+          return commandMethod(request.payload, match, invokeCallback);
+        };
+        // if there's only one command-handling method then run it:
+        if (typeof commandHandler === 'function') {
+          return invokeCommand(commandHandler);
+        }
+        // if that doesn't exist, try to find a command-handler that matches the text:
+        const requestedSubcommand = request.payload.text;
+        const subCommands = Object.keys(commandHandler);
+        for (let i = 0; i < subCommands.length; i++) {
+          const commandToMatch = subCommands[i];
+          // don't try to match '*', it's the fallback:
+          if (commandToMatch === '*') {
+            continue;
+          }
+          const isMatched = requestedSubcommand.match(new RegExp(commandToMatch, ['i']));
+          if (isMatched !== null) {
+            return invokeCommand(commandHandler[commandToMatch], isMatched);
           }
         }
-        Object.keys(this.cmdMatches).forEach((key) => {
-        });
+        // if nothing was found to match, try '*', the fallback method:
+        if (commandHandler['*']) {
+          return invokeCommand(commandHandler['*']);
+        }
+        // if nothing was found and no fallback defined, treat as error:
+        return reply(boom.methodNotAllowed);
       }
     });
     this.server.start(() => {
@@ -48,31 +79,4 @@ class SlackCommand {
   }
 }
 
-
-/*
-const slackCommand = new SlackCommand(token);
-
-slackCommand('/pt', {
-  groups: function(slackPayload, match, done) {
-    //triggered if I do /pt groups
-    const reply = {
-      message: 'here are your groups....'
-    }
-    done(null, reply); //reply gets sent back to slack
-  },
-  'group (.*)': function(slackPayload, match, done) {
-    //triggered if I do /pt group test.
-    //match should be the regex match result. 'test'
-  },
-  '*': function(slackPayload, match, done) {
-    //triggered if nothing else matches
-  }
-});
-
-//shorthand version
-slackCommand('/test', function(slackPayload, done) {
-
-});
-
-slackCommand.listen(port);
-*/
+module.exports = SlackCommand;
