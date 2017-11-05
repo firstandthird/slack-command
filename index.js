@@ -73,17 +73,23 @@ class SlackCommand {
   }
 
   listen(port, callback) {
+    // can be called without specifying port:
+    if (typeof port === 'function') {
+      callback = port;
+    }
+    // may need to run its own internal server if not a hapi plugin:
     if (!this.server) {
       this.server = new Hapi.Server();
       this.server.connection({ port });
     }
+    // the main request handler is a member of SlackCommand:
     const handler = this.handler.bind(this);
     this.server.route({
       method: 'POST',
       path: this.options.routeToListen,
       handler
     });
-    if (this.server.info.started === 0) {
+    if (this.server.start) {
       this.server.start(() => {
         if (typeof callback === 'function') {
           return callback();

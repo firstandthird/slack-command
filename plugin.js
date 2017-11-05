@@ -1,0 +1,12 @@
+const SlackCommand = require('./index.js');
+
+exports.register = function(server, options, next) {
+  const slackCommand = new SlackCommand('a token', options, server);
+  server.decorate('server', 'registerSlackCommand', slackCommand.register.bind(slackCommand));
+  slackCommand.listen();
+  next();
+};
+
+exports.register.attributes = {
+  name: 'slack-command'
+};
