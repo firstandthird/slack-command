@@ -1,4 +1,4 @@
-const SlackCommand = require('./index.js');
+const SlackCommand = require('./slackCommand.js');
 
 exports.register = function(server, options, next) {
   const slackCommand = new SlackCommand('a token', options, server);

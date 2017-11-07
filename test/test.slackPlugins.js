@@ -1,6 +1,6 @@
 'use strict';
 const tap = require('tap');
-const plugin = require('../plugin.js')
+const plugin = require('../index.js')
 const Hapi = require('hapi');
 const async = require('async');
 

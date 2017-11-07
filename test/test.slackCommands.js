@@ -1,6 +1,6 @@
 'use strict';
 const tap = require('tap');
-const SlackCommand = require('../index.js');
+const SlackCommand = require('../index.js').SlackCommand;
 
 let slackCommand;
 tap.beforeEach((done) => {
