@@ -63,7 +63,6 @@ tap.test('plugin registers and processes commands', (t) => {
     },
     cleanup(query1, query2, server, done) {
       server.stop(done);
-      process.exit();
     }
   }, (err, result) => {
     t.equal(err, null);
