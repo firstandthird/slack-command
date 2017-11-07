@@ -14,7 +14,9 @@ tap.test('plugin registers and processes commands', (t) => {
     register(server, done) {
       server.register({
         register: plugin,
-        options: {}
+        options: {
+          token: 'a token'
+        }
       }, done);
     },
     start(server, done) {
