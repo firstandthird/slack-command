@@ -66,10 +66,7 @@ tap.test('plugin registers and processes commands', (t) => {
       process.exit();
     }
   }, (err, result) => {
-    console.log('???')
-    console.log('???')
-    console.log('???')
-    // t.equal(err, null);
+    t.equal(err, null);
     t.end();
   });
 });
