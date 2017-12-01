@@ -22,24 +22,24 @@ class SlackCommand {
     this.server.stop(callback);
   }
 
-  handler(request, reply) {
+  handler(request, h) {
     const slackCommand = this;
     // make sure the token matches:
     if (request.payload.token !== slackCommand.token) {
-      return reply(boom.unauthorized(request));
+      throw boom.unauthorized(request);
     }
     // make sure that command exists:
     const commandHandler = slackCommand.commands[request.payload.command];
     if (commandHandler === undefined) {
-      return reply(boom.methodNotAllowed());
+      throw boom.methodNotAllowed();
     }
     // a method to invoke commands:
     const invokeCommand = (commandMethod, match) => {
       const invokeCallback = (err, commandResult) => {
         if (err) {
-          return reply(boom.wrap(err));
+          throw boom.wrap(err);
         }
-        return reply(null, commandResult);
+        return h.response(commandResult);
       };
       if (!match) {
         return commandMethod(request.payload, invokeCallback);
@@ -69,7 +69,7 @@ class SlackCommand {
       return invokeCommand(commandHandler['*']);
     }
     // if nothing was found and no fallback defined, treat as error:
-    return reply(boom.methodNotAllowed);
+    throw boom.methodNotAllowed;
   }
 
   listen(port, callback) {
