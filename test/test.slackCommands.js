@@ -3,79 +3,80 @@ const tap = require('tap');
 const SlackCommand = require('../index.js').SlackCommand;
 
 let slackCommand;
-tap.beforeEach((done) => {
+tap.beforeEach(async() => {
   slackCommand = new SlackCommand('a token');
-  slackCommand.listen(8080, done);
+  await slackCommand.listen(8080);
 });
 
-tap.afterEach((done) => {
-  slackCommand.stop(done);
+tap.afterEach(async() => {
+  await slackCommand.stop();
 });
 
-tap.test('rejects if token does not match', (t) => {
-  slackCommand.server.inject({
+tap.test('rejects if token does not match', async (t) => {
+  const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/',
     payload: {
       token: 'is wrong'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 401, '401 unauthorized status code when token rejected');
-    slackCommand.stop(t.end);
   });
+  t.equal(response.statusCode, 401, '401 unauthorized status code when token rejected');
+  await slackCommand.stop();
+  t.end();
 });
 
-tap.test('notifies if there is no matching command', (t) => {
-  slackCommand.server.inject({
+tap.test('notifies if there is no matching command', async(t) => {
+  const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/',
     payload: {
       token: 'a token',
       command: '/and_conquer'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 405, '405 when command is missing ');
-    slackCommand.stop(t.end);
   });
+  t.equal(response.statusCode, 405, '405 when command is missing ');
+  await slackCommand.stop();
+  t.end();
 });
 
-tap.test('can register handlers ', (t) => {
+tap.test('can register handlers ', async(t) => {
   slackCommand.register('/test', (slackPayload, done) => {});
   t.equal(typeof slackCommand.commands['/test'], 'function', 'registers the handler when specified as a function');
   slackCommand.register('/test', { '*': (slackPayload, done) => {} });
   t.equal(typeof slackCommand.commands['/test']['*'], 'function', 'registers the handler when specified as an object');
-  slackCommand.stop(t.end);
+  await slackCommand.stop();
+  t.end();
 });
 
-tap.test('accepts and processes command registered as a function', (t) => {
-  slackCommand.register('/test', (slackPayload, done) => {
-    done(null, 'hello');
+tap.test('accepts and processes command registered as a function', async(t) => {
+  slackCommand.register('/test', (slackPayload) => {
+    return 'hello';
   });
-  slackCommand.server.inject({
+  const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/',
     payload: {
       token: 'a token',
       command: '/test'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 200, '200 when token accepted ');
-    t.equal(response.result, 'hello', 'gets info back');
-    slackCommand.stop(t.end);
   });
+  t.equal(response.statusCode, 200, '200 when token accepted ');
+  t.equal(response.result, 'hello', 'gets info back');
+  await slackCommand.stop();
+  t.end();
 });
 
-tap.test('accepts and matches text for a command registered as an object', (t) => {
+tap.test('accepts and matches text for a command registered as an object', async(t) => {
   slackCommand.register('/test', {
-    groups: (slackPayload, match, done) => {
-      done(null, 'hello');
+    groups: (slackPayload, match) => {
+      return 'hello';
     },
-    'group (.*)': function(slackPayload, match, done) {
+    'group (.*)': function(slackPayload, match) {
       //triggered if I do /pt group test.
-      done(null, 'goodbye');
+      return 'goodbye';
     },
   });
-  slackCommand.server.inject({
+  const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/',
     payload: {
@@ -83,32 +84,31 @@ tap.test('accepts and matches text for a command registered as an object', (t) =
       command: '/test',
       text: 'groups'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 200, '200 when token accepted ');
-    t.equal(response.result, 'hello', 'gets info back');
-    slackCommand.server.inject({
-      method: 'POST',
-      url: '/',
-      payload: {
-        token: 'a token',
-        command: '/test',
-        text: 'group test'
-      }
-    }, (response2) => {
-      t.equal(response2.statusCode, 200, '200 when token accepted ');
-      t.equal(response2.result, 'goodbye', 'gets info back');
-      slackCommand.stop(t.end);
-    });
   });
+  t.equal(response.statusCode, 200, '200 when token accepted ');
+  t.equal(response.result, 'hello', 'gets info back');
+  const response2 = await slackCommand.server.inject({
+    method: 'POST',
+    url: '/',
+    payload: {
+      token: 'a token',
+      command: '/test',
+      text: 'group test'
+    }
+  });
+  t.equal(response2.statusCode, 200, '200 when token accepted ');
+  t.equal(response2.result, 'goodbye', 'gets info back');
+  await slackCommand.stop();
+  t.end();
 });
 
-tap.test('calls fallback if nothing matched the text', (t) => {
+tap.test('calls fallback if nothing matched the text', async(t) => {
   slackCommand.register('/test', {
-    '*': function(slackPayload, done) {
-      done(null, 'hello');
+    '*': function(slackPayload) {
+      return 'hello';
     },
   });
-  slackCommand.server.inject({
+  const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/',
     payload: {
@@ -116,9 +116,9 @@ tap.test('calls fallback if nothing matched the text', (t) => {
       command: '/test',
       text: 'groups'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 200, '200 when token accepted ');
-    t.equal(response.result, 'hello', 'gets info back');
-    slackCommand.stop(t.end);
   });
+  t.equal(response.statusCode, 200, '200 when token accepted ');
+  t.equal(response.result, 'hello', 'gets info back');
+  await slackCommand.stop();
+  t.end();
 });
