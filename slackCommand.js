@@ -63,6 +63,7 @@ class SlackCommand {
     // may need to run its own internal server if not a hapi plugin:
     if (!this.server) {
       this.server = new Hapi.Server({ port });
+      await this.server.start();
     }
     // the main request handler is a member of SlackCommand:
     const handler = this.handler.bind(this);
@@ -71,9 +72,6 @@ class SlackCommand {
       path: this.options.routeToListen,
       handler
     });
-    if (this.server.start) {
-      await this.server.start();
-    }
   }
 }
 
