@@ -15,7 +15,7 @@ class SlackCommand {
   }
 
   register(command, commandHandlers) {
-    this.commands[command] = commandHandlers;
+    this.commands[command] =  commandHandlers;
   }
 
   async stop() {
