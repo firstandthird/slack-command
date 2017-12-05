@@ -41,17 +41,8 @@ tap.test('notifies if there is no matching command', async(t) => {
   t.end();
 });
 
-tap.test('can register handlers ', async(t) => {
-  slackCommand.register('/test', (slackPayload, done) => {});
-  t.equal(typeof slackCommand.commands['/test'], 'function', 'registers the handler when specified as a function');
-  slackCommand.register('/test', { '*': (slackPayload, done) => {} });
-  t.equal(typeof slackCommand.commands['/test']['*'], 'function', 'registers the handler when specified as an object');
-  await slackCommand.stop();
-  t.end();
-});
-
 tap.test('accepts and processes command registered as a function', async(t) => {
-  slackCommand.register('/test', (slackPayload) => {
+  slackCommand.server.registerSlackCommand('/test', (slackPayload) => {
     return 'hello';
   });
   const response = await slackCommand.server.inject({
@@ -69,7 +60,7 @@ tap.test('accepts and processes command registered as a function', async(t) => {
 });
 
 tap.test('accepts and matches text for a command registered as an object', async(t) => {
-  slackCommand.register('/test', {
+  slackCommand.server.registerSlackCommand('/test', {
     groups: (slackPayload, match) => {
       return 'hello';
     },
@@ -105,7 +96,7 @@ tap.test('accepts and matches text for a command registered as an object', async
 });
 
 tap.test('calls fallback if nothing matched the text', async(t) => {
-  slackCommand.register('/test', {
+  slackCommand.server.registerSlackCommand('/test', {
     '*': function(slackPayload) {
       return 'hello';
     },
