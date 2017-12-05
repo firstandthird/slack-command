@@ -1,11 +1,13 @@
 'use strict';
 const tap = require('tap');
-const SlackCommand = require('../index.js').SlackCommand;
+const SlackCommand = require('../index.js');
 
 let slackCommand;
 tap.beforeEach(async() => {
-  slackCommand = new SlackCommand('a token');
-  await slackCommand.listen(8080);
+  slackCommand = new SlackCommand(8080, {
+    token: 'a token'
+  });
+  await slackCommand.start();
 });
 
 tap.afterEach(async() => {
