@@ -9,6 +9,10 @@ class SlackCommand {
     this.server = new Hapi.Server({ port });
   }
 
+  registerSlackCommand(command, commandHandler, commandDescription) {
+    this.server.registerSlackCommand(command, commandHandler, commandDescription);
+  }
+
   async stop() {
     await this.server.stop();
   }
