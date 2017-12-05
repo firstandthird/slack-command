@@ -17,9 +17,10 @@
     "url": "https://github.com/firstandthird/slack-command/issues"
   },
   "homepage": "https://github.com/firstandthird/slack-command#readme",
-  "dependencies": {},
+  "dependencies": {
+    "hapi-slack-command": "0.0.1"
+  },
   "devDependencies": {
-    "async": "^2.5.0",
     "eslint": "3.15.0",
     "eslint-config-firstandthird": "3.2.0",
     "eslint-plugin-import": "2.2.0",
