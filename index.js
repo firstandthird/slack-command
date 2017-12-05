@@ -9,7 +9,7 @@ class SlackCommand {
     this.server = new Hapi.Server({ port });
   }
 
-  registerSlackCommand(command, commandHandler, commandDescription) {
+  register(command, commandHandler, commandDescription) {
     this.server.registerSlackCommand(command, commandHandler, commandDescription);
   }
 

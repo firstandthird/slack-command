@@ -15,7 +15,7 @@ tap.afterEach(async() => {
 });
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  slackCommand.registerSlackCommand('/test', (slackPayload) => {
+  slackCommand.register('/test', (slackPayload) => {
     return 'hello';
   });
   const response = await slackCommand.server.inject({
