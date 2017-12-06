@@ -25,12 +25,13 @@ class SlackCommand {
           flat: {
             reporter: 'logr-flat',
             options: {}
-         }
+          }
         }
       }
     }
     ]);
     await this.server.start();
+    this.server.log(['slack-command'], 'Slack-command server is started');
   }
 }
 
