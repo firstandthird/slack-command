@@ -1,6 +1,6 @@
 {
   "name": "slack-command",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "slack command server",
   "scripts": {
     "start": "node index.js",
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/firstandthird/slack-command#readme",
   "dependencies": {
     "hapi-logr": "^4.0.0",
-    "hapi-slack-command": "1.0.0",
+    "hapi-slack-command": "2.0.0",
     "hapi": "^17.1.1",
     "logr-flat": "^3.0.0"
   },
