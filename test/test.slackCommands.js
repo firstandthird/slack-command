@@ -15,15 +15,16 @@ tap.afterEach(async() => {
 });
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  slackCommand.register('/test', (slackPayload) => {
+  slackCommand.register('check', (slackPayload) => {
     return 'hello';
   });
   const response = await slackCommand.server.inject({
     method: 'POST',
-    url: '/',
+    url: '/api/command',
     payload: {
       token: 'a token',
-      command: '/test'
+      command: '/test',
+      text: 'check'
     }
   });
   t.equal(response.statusCode, 200, '200 when token accepted ');
