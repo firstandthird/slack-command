@@ -1,3 +1,4 @@
+commandsDir: '{{CWD}}'
 token: 'a token'
 plugins:
   'hapi-method-loader':
