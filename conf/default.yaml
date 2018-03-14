@@ -1,6 +1,9 @@
-commandsDir: '{{CWD}}'
+commandsDir: '{{CWD}}/commands'
 token: 'a token'
 plugins:
+  './commander.js':
+    _dependencies:
+      - 'hapi-slack-command'
   'hapi-method-loader':
     _enabled: false
   'hapi-route-loader':

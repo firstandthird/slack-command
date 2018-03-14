@@ -22,9 +22,9 @@ tap.test('accepts and processes command registered as a function', async(t) => {
 });
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  const slackCommand = new Rapptor({});
+  const slackCommand = new Rapptor({ env: 'test' });
   await slackCommand.start();
-  slackCommand.server.registerSlackCommand('check', slackPayload => 'hello');
+  // 'check' command will be registered by the ./commander.js plugin:
   const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/api/command',
