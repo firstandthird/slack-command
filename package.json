@@ -4,7 +4,7 @@
   "description": "slack command server",
   "scripts": {
     "start": "node index.js",
-    "test": "tap test/*.js | tap-spec"
+    "test": "tap test/*.js --cov"
   },
   "repository": {
     "type": "git",
@@ -18,17 +18,16 @@
   },
   "homepage": "https://github.com/firstandthird/slack-command#readme",
   "dependencies": {
-    "hapi": "^17.1.1",
-    "hapi-logr": "^4.0.0",
+    "hapi": "^17.2.2",
+    "hapi-logr": "^5.0.0",
     "hapi-slack-command": "^2.1.0",
-    "logr-flat": "^3.0.0"
+    "logr-flat": "^3.1.0"
   },
   "devDependencies": {
-    "eslint": "3.15.0",
-    "eslint-config-firstandthird": "3.2.0",
-    "eslint-plugin-import": "2.2.0",
-    "tap": "^10.3.0",
-    "tap-spec": "^4.1.1"
+    "eslint": "^4.18.2",
+    "eslint-config-firstandthird": "^4.3.0",
+    "eslint-plugin-import": "^2.9.0",
+    "tap": "^11.1.2"
   },
   "eslintConfig": {
     "extends": "firstandthird"
