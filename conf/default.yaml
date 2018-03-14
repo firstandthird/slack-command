@@ -1,0 +1,17 @@
+token: 'a token'
+plugins:
+  'hapi-method-loader':
+    _enabled: false
+  'hapi-route-loader':
+    _enabled: false
+  './index':
+    token: 'a token'
+    _dependencies:
+      - 'hapi-slack-command'
+      - 'hapi-logr'
+  'hapi-slack-command':
+  'hapi-logr':
+    reporters:
+      flat:
+        reporter: 'logr-flat'
+        options:

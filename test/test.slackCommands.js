@@ -1,12 +1,10 @@
 'use strict';
 const tap = require('tap');
-const SlackCommand = require('../index.js');
+const Rapptor = require('rapptor');
 
 let slackCommand;
 tap.beforeEach(async() => {
-  slackCommand = new SlackCommand(8080, {
-    token: 'a token'
-  });
+  slackCommand = new Rapptor({});
   await slackCommand.start();
 });
 
@@ -15,9 +13,7 @@ tap.afterEach(async() => {
 });
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  slackCommand.register('check', (slackPayload) => {
-    return 'hello';
-  });
+  slackCommand.server.registerSlackCommand('check', slackPayload => 'hello');
   const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/api/command',
