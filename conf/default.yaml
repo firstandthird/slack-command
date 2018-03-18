@@ -1,15 +1,9 @@
-token: 'a token'
 plugins:
   'hapi-method-loader':
     _enabled: false
   'hapi-route-loader':
     _enabled: false
   'hapi-slack-command':
-    token: 'a token'
+    token: '{{getEnv("TOKEN")}}'
     _dependencies:
       - 'hapi-logr'
-  'hapi-logr':
-    reporters:
-      flat:
-        reporter: 'logr-flat'
-        options:
