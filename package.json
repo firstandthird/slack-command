@@ -4,7 +4,7 @@
   "description": "slack command server",
   "scripts": {
     "start": "rapptor",
-    "test": "tap test/*.js --cov"
+    "test": "TOKEN=token tap test/*.js --cov"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,7 @@
   },
   "homepage": "https://github.com/firstandthird/slack-command#readme",
   "dependencies": {
-    "hapi": "^17.2.2",
-    "hapi-logr": "^5.0.0",
     "hapi-slack-command": "^2.1.0",
-    "logr-flat": "^3.1.0",
     "rapptor": "^5.8.0"
   },
   "devDependencies": {
