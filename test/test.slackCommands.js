@@ -18,7 +18,7 @@ tap.test('accepts and processes command registered as a function', async(t) => {
     method: 'POST',
     url: '/api/command',
     payload: {
-      token: 'a token',
+      token: 'token',
       command: '/test',
       text: 'check'
     }

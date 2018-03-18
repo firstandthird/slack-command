@@ -4,7 +4,7 @@
   "description": "slack command server",
   "scripts": {
     "start": "rapptor",
-    "test": "tap test/*.js --cov"
+    "test": "TOKEN=token tap test/*.js --cov"
   },
   "repository": {
     "type": "git",
