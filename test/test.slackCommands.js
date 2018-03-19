@@ -3,7 +3,11 @@ const tap = require('tap');
 const Rapptor = require('rapptor');
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  const slackCommand = new Rapptor({});
+  const slackCommand = new Rapptor({
+    context: {
+      LIBDIR: process.cwd()
+    }
+  });
   await slackCommand.start();
   slackCommand.server.registerSlackCommand('check', slackPayload => 'hello');
   const response = await slackCommand.server.inject({
@@ -22,7 +26,12 @@ tap.test('accepts and processes command registered as a function', async(t) => {
 });
 
 tap.test('accepts and processes command registered as a function', async(t) => {
-  const slackCommand = new Rapptor({ env: 'test' });
+  const slackCommand = new Rapptor({
+    env: 'test',
+    context: {
+      LIBDIR: process.cwd()
+    }
+  });
   await slackCommand.start();
   // 'check' command will be registered by the ./commander.js plugin:
   const response = await slackCommand.server.inject({
