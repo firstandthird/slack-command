@@ -8,4 +8,4 @@ plugins:
     token: '{{getEnv("TOKEN")}}'
     _dependencies:
       - 'hapi-logr'
-  './commander.js':
+  '{{LIBDIR}}/commander.js':
