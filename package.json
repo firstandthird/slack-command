@@ -6,6 +6,10 @@
     "start": "rapptor",
     "test": "TOKEN=token tap test/*.js --cov"
   },
+  "main": "cli.js",
+  "bin": {
+    "slack-command": "cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/firstandthird/slack-command.git"
