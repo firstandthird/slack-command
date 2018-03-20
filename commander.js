@@ -6,7 +6,7 @@ const register = (server, options) => {
   if (fs.existsSync(commandDir)) {
     fs.readdirSync(commandDir).forEach(file => {
       const command = require(path.join(commandDir, file));
-      server.registerSlackCommand(command.expression, command.handler, command.description);
+      server.slackCommand.register(command.expression, command.handler, command.description);
     });
   }
 };

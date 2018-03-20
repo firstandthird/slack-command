@@ -9,7 +9,7 @@ tap.test('accepts and processes command registered as a function', async(t) => {
     }
   });
   await slackCommand.start();
-  slackCommand.server.registerSlackCommand('check', slackPayload => 'hello');
+  slackCommand.server.slackCommand.register('check', slackPayload => 'hello');
   const response = await slackCommand.server.inject({
     method: 'POST',
     url: '/api/command',
