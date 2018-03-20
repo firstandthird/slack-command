@@ -1,1 +1,7 @@
-commandsDir: '{{CWD}}/test/commands'
+plugins:
+  'hapi-slack-command':
+    token: '{{getEnv("TOKEN")}}'
+    commandDir: '{{CWD}}/test/commands'
+    callbackDir: '{{CWD}}/callbacks'
+    _dependencies:
+      - 'hapi-logr'
