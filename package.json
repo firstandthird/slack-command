@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/firstandthird/slack-command#readme",
   "dependencies": {
-    "hapi-slack-command": "^2.2.0",
+    "hapi-slack-command": "^3.1.0",
     "rapptor": "^5.8.0"
   },
   "devDependencies": {

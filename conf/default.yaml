@@ -1,4 +1,3 @@
-commandsDir: '{{CWD}}/commands'
 plugins:
   'hapi-method-loader':
     _enabled: false
@@ -6,6 +5,7 @@ plugins:
     _enabled: false
   'hapi-slack-command':
     token: '{{getEnv("TOKEN")}}'
+    commandDir: '{{CWD}}/commands'
+    callbackDir: '{{CWD}}/callbacks'
     _dependencies:
       - 'hapi-logr'
-  '{{LIBDIR}}/commander.js':
