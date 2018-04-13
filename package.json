@@ -23,7 +23,7 @@
   "homepage": "https://github.com/firstandthird/slack-command#readme",
   "dependencies": {
     "hapi-slack-command": "^3.1.1",
-    "rapptor": "^5.8.0"
+    "rapptor": "^5.10.1"
   },
   "devDependencies": {
     "eslint": "^4.18.2",
