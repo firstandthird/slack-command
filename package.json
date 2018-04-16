@@ -1,6 +1,6 @@
 {
   "name": "slack-command",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "slack command server",
   "scripts": {
     "start": "rapptor",
